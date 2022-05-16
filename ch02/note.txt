@@ -13,7 +13,7 @@ C-c C-z     Back to REPL
 
 C-x C-f     Create new file
 C-x C-s     Save file
-C-c C-c     Compile
+C-c C-c     Compile per function
 C-c C-l     Compile without REPL
 C-c C-k     Also compile without REPL
 
