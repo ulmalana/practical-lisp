@@ -1,0 +1,68 @@
+* How Lisp code is processed
+Code -> Language Processor -> Behaviour/Compiled version
+
+Language processor consist of
+1. reader: translate text into Lisp objects
+2. evaluator: implement the semantics of the language in terms of Lisp objetcs
+
+* S-expression
+(fn x1 x2 x3 ... xn)
+fn = function
+x* = arguments (atoms)
+
+* Number representation
+123
+3/7
+1.0 (default precision)
+1.0e0 (floating point)
+1.0d0 (double precision)
+1.0e-4 (1/10000)
++42
+-42
+-1/4
+-2/8
+() = Nil
+
+* String escapes char
+"foo" = foo
+"fo\o" = foo
+"fo\\o" = fo\o
+"fo\"o" = fo"o
+
+Some objetcs/atoms are self-evaluated (numbers, strings)
+
+Lisp boolean value
+T -> True
+NIL -> False
+
+* How expressions are evaluated
+example: (+ 1 2)
+1. evaluate 1 (self-evaluating)
+2. evaluate 2 (self-evaluating)
+3. pass the resulting values to + function (returns 3)
+
+(* (+ 1 2) (- 3 4)
+1. evaluate (+ 1 2) with the technique above
+2. evaluate (- 3 4) with the technique above
+3. pass the value 3 and -1 to * function
+
+* Special operators
+some operators have different behaviour compared to ordinary function
+such as IF operator. if IF operator follows the common argument evaluation
+technique (above) from left to right, then it will not works as intended.
+
+IF operator flows
+(if test-form then-form [else-form])
+
+* Macro
+Macro takes s-expression as arguments and returns a Lisp form.
+This Lisp form is then evaluated in place of the macro form.
+
+* How macros is evaluated
+1. Elements of macro form are passed, unevaluated,  to the macro function.
+2. The form returned by the macro function (expansion) is evaluated according
+   to normal rules.
+
+* Truth and False
+## Avoid EQ function for numbers or chars ###
+## Use EQL instead ##
