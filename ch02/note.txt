@@ -3,6 +3,9 @@ Note
 Use Portacle as IDE to learn Lisp
 https://portacle.github.io
 
+OR spacemacs
+https://www.spacemacs.org/
+
 ### Some useful key combos ###
 C-h t       Tutorial
 C-h i       Info/Manual
