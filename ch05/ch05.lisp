@@ -18,3 +18,52 @@
   (loop for i from min to max by step do
         (loop repeat (funcall fn i) do (format t "*"))
         (format t "~%")))
+
+;;; optional parameters
+(defun foo-optional (a b &optional c d)
+  (list a b c d))
+
+(foo-optional 1 2)
+;; => (1 2 NIL NIL)
+(foo-optional 1 2 3)
+;; (1 2 3 NIL)
+
+(foo-optional 1 2 3 4)
+;; (1 2 3 4)
+
+(defun foo-optional-def (a &optional (b 10)) (list a b))
+
+(foo-optional-def 1 2)
+
+(foo-optional-def 1)
+
+;;; supplied-p parameters
+(defun foo-supplied (a b &optional (c 3 c-supplied-p))
+  (list a b c c-supplied-p))
+
+(foo-supplied 1 2)
+
+(foo-supplied 1 2 3)
+
+(foo-supplied 1 2 4)
+
+;;; keyword parameters
+(defun foo-key (&key a b c)
+  (list a b c))
+
+(foo-key)
+
+(foo-key :a 1 :c 3)
+
+(defun foo-key-mix (&key (a 0) (b 0 b-supplied-p) (c (+ a b)))
+  (list a b c b-supplied-p))
+
+(foo-key-mix :b 1)
+
+(foo-key-mix :a 2 :b 1 :c 4)
+
+;;; useful for decouple public API and internal details
+(defun foo-key-diff (&key ((:apple a)) ((:box b) 0) ((:charlie c) 0 c-supplied-p))
+  (list a b c c-supplied-p))
+
+(foo-key-diff :apple 10 :box 20 :charlie 30)
