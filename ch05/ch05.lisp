@@ -67,3 +67,42 @@
   (list a b c c-supplied-p))
 
 (foo-key-diff :apple 10 :box 20 :charlie 30)
+
+(defun foo-return-from (n)
+  (dotimes (i 10)
+    (dotimes (j 10)
+      (when (> (* i j) n)
+        (return-from foo-return-from (list i j))))))
+
+(foo-return-from 55)
+
+;; get a function object
+
+(defun foo-object (x) (* 2 x))
+;; => #<FUNCTION FOO-OBJECT>
+
+(plot #'exp 0 4 1/2)
+;; *
+;; **
+;; ***
+;; *****
+;; ********
+;; *************
+;; *********************
+;; **********************************
+;; *******************************************************
+;; NIL
+
+(plot #'(lambda (x) (* 2 x)) 0 10 1)
+;;
+;; **
+;; ****
+;; ******
+;; ********
+;; **********
+;; ************
+;; **************
+;; ****************
+;; ******************
+;; ********************
+;; NIL
