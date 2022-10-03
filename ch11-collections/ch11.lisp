@@ -156,3 +156,160 @@
 ;; looking at (B 20)
 ;; looking at (A 10)
 ;; 2
+
+;;; hof variants
+
+(count-if #'evenp #(1 2 3 4 5))
+;; 2
+
+(count-if-not #'evenp #(1 2 3 4 5))
+;; 3
+
+(position-if #'digit-char-p "abcd0001")
+;; 4
+
+(remove-if-not #'(lambda (x) (char= (elt x 0) #\f)) #("foo" "bar" "baz" "foom"))
+;; #("foo" "foom")
+
+(remove-duplicates #(1 2 1 2 3 4 5 5 4))
+;; #(1 2 3 5 4)
+
+(concatenate 'vector #(1 2 3) '(4 5 6))
+;; #(1 2 3 4 5 6)
+
+(concatenate 'list #(1 2 3) '(4 5 6))
+;; (1 2 3 4 5 6)
+
+(concatenate 'string "abc" '(#\d #\e #\f))
+;; "abcdef"
+
+(sort (vector "foo" "bar" "baz") #'string<)
+;; #("bar" "baz" "foo")
+
+(merge 'vector #(1 3 5) #(2 4 6) #'<)
+;; #(1 2 3 4 5 6)
+
+(merge 'list #(1 3 5) #(2 4 6) #'<)
+;; (1 2 3 4 5 6)
+
+;;; subseq manipulations
+(subseq "foobarbaz" 3)
+;; "barbaz"
+
+(subseq "foobarbaz" 3 6)
+;; "bar"
+
+(defparameter *x* (copy-seq "foobarbaz"))
+;; *X*
+
+*x*
+;; "foobarbaz"
+
+(setf (subseq *x* 3 6) "xxx")
+;; "xxx"
+
+*x*
+;; "fooxxxbaz"
+
+(setf (subseq *x* 3 6) "abcd")
+;; "abcd"
+
+*x*
+;; "fooabcbaz"
+
+(setf (subseq *x* 3 6) "xx")
+;;"xx"
+
+*x*
+;; "fooxxcbaz"
+
+(position #\b "foobarbaz")
+;; 3
+
+(search "bar" "foobarbaz")
+;; 3
+
+(mismatch "foobarbaz" "foom")
+;; 3
+
+(mismatch "foobar" "bar" :from-end t)
+;; 3
+
+;;; sequence predicates
+(every #'evenp #(1 2 3 4 5))
+;; NIL
+
+(some #'evenp #(1 2 3 4 5))
+;; T
+
+(notany #'evenp #(1 2 3 4 5))
+;; NIL
+
+(notevery #'evenp #(1 2 3 4 5))
+;; T
+
+(every #'> #(1 2 3 4) #(5 4 3 2))
+;; NIL
+
+(some #'> #(1 2 3 4) #(5 4 3 2))
+;; T
+
+(notany #'> #(1 2 3 4) #(5 4 3 2))
+;; NIL
+
+(notevery #'> #(1 2 3 4) #(5 4 3 2))
+;; T
+
+;;; sequence mapping
+(map 'vector #'* #(1 2 3 4 5) #(10 9 8 7 6))
+;; #(10 18 24 28 30)
+
+(reduce #'+ #(1 2 3 4 5 6 7 8 9 10))
+;; 55
+
+;;; hash table
+(defparameter *h* (make-hash-table))
+;; *H*
+
+(gethash 'foo *h*)
+;; NIL
+;; NIL
+
+(setf (gethash 'foo *h*) 'quux)
+;; QUUX
+
+*h*
+;; #<HASH-TABLE :TEST EQL :COUNT 1 {1002F81003}>
+
+(gethash 'foo *h*)
+;; QUUX
+;; T
+
+(defun show-value (key hash-table)
+  (multiple-value-bind (value present) (gethash key hash-table)
+    (if present
+        (format nil "Value ~a actually present." value)
+        (format nil "Value ~a because key not found." value))))
+
+(setf (gethash 'bar *h*) nil)
+;; NIL
+
+(show-value 'foo *h*)
+;; "Value QUUX actually present."
+
+(show-value 'bar *h*)
+;; "Value NIL actually present."
+
+(show-value 'baz *h*)
+;; "Value NIL because key not found."
+
+(maphash #'(lambda (k v) (format t "~a => ~a~%" k v)) *h*)
+;; FOO => QUUX
+;; BAR => NIL
+;; NIL
+
+(loop for k being the hash-keys in *h* using (hash-value v)
+      do (format t "~a => ~a~%" k v))
+;; FOO => QUUX
+;; BAR => NIL
+;; NI
