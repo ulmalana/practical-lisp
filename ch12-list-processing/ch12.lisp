@@ -86,4 +86,19 @@
 ;; (1 2 3 4 5 6)
 
 *x*
-(1 2 3 4 5 6)
+;; (1 2 3 4 5 6)
+
+(defun upto (max)
+  (let ((result nil))
+    (dotimes (i max)
+      (push i result))
+    (nreverse result)))
+
+(upto 10)
+;; (0 1 2 3 4 5 6 7 8 9)
+
+(mapcar #'(lambda (x) (* 2 x)) (list 1 2 3))
+;; (2 4 6)
+
+(mapcar #'+ (list 1 2 3) (list 10 20 30))
+;; (11 22 33)
